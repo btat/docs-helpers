@@ -1,7 +1,9 @@
 # Check all Markdown files in the /docs dir. If the file doesn't have a
 # canonical url, add it and add it to the versioned pages with the same filepath
 Dir.glob('docs/**/*.md') do |file|
-  domain = "https://ranchermanager.docs.rancher.com"
+
+  # e.g. "https://ranchermanager.docs.rancher.com" without the trailing slash
+  domain = ARGV[0]
   canonical_url = (domain + file.sub("docs/","/").sub(".md","")).sub("/","\\/").sub(".","\\.")
 
   if !%x[ grep 'slug: /' #{file} ].empty?
