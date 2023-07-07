@@ -2,6 +2,8 @@
 
 Usage:
 
+From the root of the docs repository run the command:
+
 ```
 ruby canonical_links.rb <DOMAIN> <DIRECTORY>
 ```
