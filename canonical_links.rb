@@ -28,19 +28,27 @@ remaining_files_without_canonical("versioned_docs")
 BEGIN {
   def add_canonical(file, canonical_url)
     current_file = %x[ grep '<link rel="canonical"' #{file} ]
+    new_file = []
 
     if !current_file.empty?
       return false
     elsif
       File.foreach(file).with_index do |line, line_num|
-        line = line.strip!
-        if line == "---" && line_num > 0
-          canonical_tag = "---\\n\\n<head>\\n  <link rel=\"canonical\" href=\"#{canonical_url}\"\\/>\\n<\\/head>"
-          %x[ sed -i '#{line_num+1}s|---|#{canonical_tag}|' #{file} ]
+        if line.strip == "---" && line_num > 0
+          canonical_tag = %{---
+
+<head>
+  <link rel="canonical" href="#{ARGV[0] + file.sub("docs/","/").sub(".md","")}"/>
+</head>
+}
+          new_file << canonical_tag
+        else
+          new_file << line
         end
       end
     end
 
+    File.write("#{file}", new_file.join)
     return true
   end
 
@@ -49,7 +57,7 @@ BEGIN {
     Dir.glob("#{dir}/**/*.md") do |file|
       current_file = %x[ grep '<link rel="canonical"' #{file} ]
       if current_file.empty?
-        files_without_canonical += [file]
+        files_without_canonical << file
       end
     end
 
