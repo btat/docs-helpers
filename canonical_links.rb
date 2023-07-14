@@ -4,7 +4,7 @@ Dir.glob("#{ARGV[1]}/**/*.md") do |file|
 
   # e.g. "https://ranchermanager.docs.rancher.com" without the trailing slash
   domain = ARGV[0]
-  canonical_url = (domain + file.sub("docs/","/").sub(".md","")).sub("/","\\/").sub(".","\\.")
+  canonical_url = domain + file.sub("docs/","/").sub(".md","")
 
   if !%x[ grep 'slug: /' #{file} ].empty?
     canonical_url = domain
@@ -29,12 +29,13 @@ BEGIN {
   def add_canonical(file, canonical_url)
     current_file = %x[ grep '<link rel="canonical"' #{file} ]
     new_file = []
+    canonical_added = false
 
     if !current_file.empty?
       return false
     elsif
       File.foreach(file).with_index do |line, line_num|
-        if line.strip == "---" && line_num > 0
+        if line.strip == "---" && line_num > 0 && !canonical_added
           canonical_tag = %{---
 
 <head>
@@ -42,6 +43,7 @@ BEGIN {
 </head>
 }
           new_file << canonical_tag
+          canonical_added = true
         else
           new_file << line
         end
