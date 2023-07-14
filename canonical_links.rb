@@ -38,7 +38,7 @@ BEGIN {
           canonical_tag = %{---
 
 <head>
-  <link rel="canonical" href="#{ARGV[0] + file.sub("docs/","/").sub(".md","")}"/>
+  <link rel="canonical" href="#{canonical_url}"/>
 </head>
 }
           new_file << canonical_tag
