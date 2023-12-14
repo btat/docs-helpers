@@ -9,7 +9,7 @@ ruby canonical_links.rb <DOMAIN> <DIRECTORY>
 ```
 
 Where:
-- `<DOMAIN>` is the base URL of your site without a trailing slash.
+- `<DOMAIN>` is the base URL of your site **without** the trailing slash.
 - `<DIRECTORY>` is the directory to check/add canonical URLs to
 
 Example:
