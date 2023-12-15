@@ -1,5 +1,10 @@
 # Docs Helpers
 
+A collection of helpers to assist Docs work.
+
+- [Canonical Links]
+- [Move Pages]
+
 ## Canonical Links
 
 - Adds a canonical link tag to all files. 
@@ -29,7 +34,7 @@ ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs/troubleshoo
 ruby canonical_links.rb https://docs.rancherdesktop.io docs/tutorials
 ```
 
-## Page Move
+## Move Pages
 
 - Takes a CSV file containing a file's current path and the new path as input.
 - Moves the specified file(s).
