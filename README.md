@@ -2,8 +2,8 @@
 
 A collection of helpers to assist Docs work.
 
-- [Canonical Links]
-- [Move Pages]
+- [Canonical Links](#canonical-links)
+- [Move Pages](#move-pages)
 
 ## Canonical Links
 
