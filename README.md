@@ -13,7 +13,7 @@ A collection of helpers to assist Docs work.
 - Outputs a file containing a list of files **without** a canonical link.
 
 Caveats:
-- Existing canonical links **aren't** overwritten.
+- Existing canonical links are **NOT** overwritten.
 
 ### Usage
 
@@ -24,7 +24,7 @@ ruby canonical_links.rb <DOMAIN> <DIRECTORY>
 ```
 
 Where:
-- `<DOMAIN>` is the base URL of your site **without** the trailing slash.
+- `<DOMAIN>` is the base URL of your site **WITHOUT** the trailing slash.
 - `<DIRECTORY>` is the directory to check/add canonical URLs to.
 
 Example:
@@ -38,9 +38,11 @@ ruby canonical_links.rb https://docs.rancherdesktop.io docs/tutorials
 
 - Takes a CSV file containing a file's current path and the new path as input.
 - Moves the specified file(s).
-- Updates the links in the moved file.
-- Updates the links in files linking to the moved file. 
+- Updates internal links that use the filepath format. Absolute links are ignored.
+  - Links in the moved file.
+  - Links in files linking to the moved file. 
 - Outputs a file containing a block of redirects to use in the Docusaurus config.
+- Updates the sidebar value of the moved page. Sidebar placement is **NOT** updated.
 
 ### Usage
 
