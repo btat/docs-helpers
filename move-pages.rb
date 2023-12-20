@@ -12,13 +12,6 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   %x[ mkdir -p #{new_path.split("/")[0..-2].join("/")} ]
   %x[ mv #{old_path}.md #{new_path}.md ]
 
-  # create redirect block for moved file
-  redirect_block = "{
-to: '#{new_path}',
-from: '#{old_path}'
-},"
-  redirects.append(redirect_block)
-
   update_links(old_path, new_path)
 
   # update sidebar
@@ -26,12 +19,28 @@ from: '#{old_path}'
     old_path = old_path.sub("docs/", "")
     new_path = new_path.sub("docs/", "")
     sidebar_file = "sidebars.js"
+
+    # create redirect block for moved file
+    redirect_block = "{
+  to: '#{new_path}',
+  from: '#{old_path}'
+  },"
+    redirects.append(redirect_block)
+
   # versioned_docs/version-XYZ
   else
     version = old_path[/version-[^\/]+/]
+    version_number = old_path[/version-[^\/]+/].sub("version-","")
     old_path = old_path.sub(/versioned_docs\/version-[^\/]+\//, "")
     new_path = new_path.sub(/versioned_docs\/version-[^\/]+\//, "")
     sidebar_file = "versioned_sidebars/#{version}-sidebars.json"
+
+    # create redirect block for moved file
+    redirect_block = "{
+  to: '/v#{version_number}/#{new_path}',
+  from: '/v#{version_number}/#{old_path}'
+  },"
+    redirects.append(redirect_block)
   end
 
   double_quoted = %x[ grep "\\"#{old_path}\\"" #{sidebar_file} ]
