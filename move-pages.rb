@@ -9,6 +9,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   old_path = row["old_path"]
   
   # move file
+  %x[ mkdir -p #{new_path.split("/")[0..-2].join("/")} ]
   %x[ mv #{old_path}.md #{new_path}.md ]
 
   # create redirect block for moved file
