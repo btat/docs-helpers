@@ -39,7 +39,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
     redirect_block = "{
   to: '/v#{version_number}/#{new_path}',
   from: '/v#{version_number}/#{old_path}'
-  },"
+},"
     redirects.append(redirect_block)
   end
 
