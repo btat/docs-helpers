@@ -22,8 +22,8 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
 
     # create redirect block for moved file
     redirect_block = "{
-  to: '#{new_path}',
-  from: '#{old_path}'
+  to: '/#{new_path}',
+  from: '/#{old_path}'
 },"
     redirects.append(redirect_block)
 
