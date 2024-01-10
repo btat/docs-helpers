@@ -4,7 +4,7 @@ Dir.glob("#{ARGV[1]}/**/*.md") do |file|
 
   # e.g. "https://ranchermanager.docs.rancher.com" without the trailing slash
   domain = ARGV[0]
-  filepath = file.split("/")[0..-2].join("/").sub("docs/","/") + "/" + file.split("/")[-1].sub(/^\d+-/, "").sub(".md","")
+  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(/^\d+-/, "")).sub("docs/","/").sub(".md","").gsub("//","/")
   canonical_url = domain + filepath
 
   if !%x[ grep 'slug: /' #{file} ].empty?
