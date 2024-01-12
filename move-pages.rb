@@ -73,6 +73,9 @@ BEGIN {
 
     if !files_with_link.empty?
       files_with_link.split.uniq.each do |file|
+        if file == "#{new_path}.md"
+          next
+        end
 
         file.chomp!
         dirname = file.split("/")[0..-2].join("/")
