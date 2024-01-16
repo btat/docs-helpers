@@ -26,7 +26,7 @@ ruby canonical_links.rb <DOMAIN> <DIRECTORY> [<FILES_TO_IGNORE>]
 Where:
 - `<DOMAIN>` is the base URL of your site.
 - `<DIRECTORY>` is the directory to check/add canonical URLs to.
-- `<FILES_TO_IGNORE>` is [OPTIONAL] and is a list of files to ignore. E.g. This may be the the list of files without a canonical link from previous runs that have been handled manually.
+- `<FILES_TO_IGNORE>` is an [OPTIONAL] list of files (one filename per line) to ignore. E.g. This may be the the list of files without a canonical link from previous runs that have been handled manually.
 
 Example:
 
