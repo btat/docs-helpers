@@ -1,25 +1,28 @@
-# Check all Markdown files in the /docs dir. If the file doesn't have a
-# canonical url, add it and add it to the versioned pages with the same filepath
+remove_existing_canonical_tag
+
+# Add a canonical url to all Markdown files in the /docs directory and add the
+# same canonical url to the pages in versioned_docs with the same filepath
 Dir.glob("#{ARGV[1]}/**/*.md") do |file|
 
-  # e.g. "https://ranchermanager.docs.rancher.com" without the trailing slash
+  # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0]
-  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(/^\d+-/, "")).sub("docs/","/").sub(".md","").gsub("//","/")
-  canonical_url = domain + filepath
+  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(/^\d+-/, "")).sub("docs/","/").sub(".md","")
+  canonical_url = (domain + filepath).gsub(/\/+/,"/")
 
   if !%x[ grep 'slug: /' #{file} ].empty?
     canonical_url = domain
   end
 
-  # If adding canonical url, find all versioned instances of file with the same
-  # path and add it to them too
-  if add_canonical(file, canonical_url)
-    versioned_files = %x[ find versioned_docs -path "*#{file.sub('docs/','')}" ]
+  add_canonical(file, canonical_url)
 
-    if !versioned_files.empty?
-      versioned_files.split.each do |versioned_file|
-        add_canonical(versioned_file, canonical_url)
-      end
+  # find all files in versioned_docs with the same filepath
+  versioned_files = %x[ find versioned_docs -path "*#{file.sub('docs/','')}" ]
+
+  # if there are files with the same filepath in versioned_docs, add the
+  # canonical url
+  if !versioned_files.empty?
+    versioned_files.split.each do |versioned_file|
+      add_canonical(versioned_file, canonical_url)
     end
   end
 end
@@ -28,26 +31,19 @@ remaining_files_without_canonical("versioned_docs")
 
 BEGIN {
   def add_canonical(file, canonical_url)
-    current_file = %x[ grep '<link rel="canonical"' #{file} ]
     new_file = []
-    canonical_added = false
 
-    if !current_file.empty?
-      return false
-    elsif
-      File.foreach(file).with_index do |line, line_num|
-        if line.strip == "---" && line_num > 0 && !canonical_added
-          canonical_tag = %{---
+    File.foreach(file).with_index do |line, line_num|
+      if line.strip == "---" && line_num > 0
+        canonical_tag = %{---
 
 <head>
   <link rel="canonical" href="#{canonical_url}"/>
 </head>
 }
-          new_file << canonical_tag
-          canonical_added = true
-        else
-          new_file << line
-        end
+        new_file << canonical_tag
+      else
+        new_file << line
       end
     end
 
@@ -65,5 +61,21 @@ BEGIN {
     end
 
     File.write("files_without_canonical.txt", files_without_canonical.join("\n"))
+  end
+
+  def remove_existing_canonical_tag
+    # find files with canonical tag
+    files = %x[ grep --include \\*.md -ril '<link rel="canonical"' ]
+    files.split.each do |file|
+      contents = File.read(file)
+
+      # remove line with canonical tag
+      new_contents = contents.sub(/  <link rel=\"canonical\".*\n/, "")
+
+      # remove empty head tags
+      aaa = new_contents.sub(/[\n]*<head>[\n]+<\/head>[\n]*/,"\n\n")
+      
+      File.open(file, "w") {|file| file.puts aaa }
+    end
   end
 }
