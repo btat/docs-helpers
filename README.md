@@ -20,17 +20,19 @@ Caveats:
 From the root of the repository run the command:
 
 ```
-ruby canonical_links.rb <DOMAIN> <DIRECTORY>
+ruby canonical_links.rb <DOMAIN> <DIRECTORY> [<FILES_TO_IGNORE>]
 ```
 
 Where:
 - `<DOMAIN>` is the base URL of your site.
 - `<DIRECTORY>` is the directory to check/add canonical URLs to.
+- `<FILES_TO_IGNORE>` is [OPTIONAL] and is a list of files to ignore. E.g. This may be the the list of files without a canonical link from previous runs that have been handled manually.
 
 Example:
 
 ```
 ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs
+ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs files_without_canonical.txt
 ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs/troubleshooting/other-troubleshooting-tips
 ruby canonical_links.rb https://docs.rancherdesktop.io docs/tutorials
 ```
