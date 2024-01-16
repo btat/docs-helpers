@@ -7,13 +7,13 @@ A collection of helpers to assist Docs work.
 
 ## Canonical Links
 
-- Adds a canonical link tag to all files. 
+- Adds a canonical link tag to all files in the `docs` directory. 
 - Assumes files in the `docs` directory are to be used as the canonical link.
 - Adds a canonical link tag to files in the `versioned_docs` directory that follow the same path as the file in the `docs` directory.
 - Outputs a file containing a list of files **without** a canonical link.
 
 Caveats:
-- Existing canonical links are **NOT** overwritten.
+- Existing canonical links are **REMOVED**.
 
 ### Usage
 
@@ -24,12 +24,13 @@ ruby canonical_links.rb <DOMAIN> <DIRECTORY>
 ```
 
 Where:
-- `<DOMAIN>` is the base URL of your site **WITHOUT** the trailing slash.
+- `<DOMAIN>` is the base URL of your site.
 - `<DIRECTORY>` is the directory to check/add canonical URLs to.
 
 Example:
 
 ```
+ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs
 ruby canonical_links.rb https://ranchermanager.docs.rancher.com docs/troubleshooting/other-troubleshooting-tips
 ruby canonical_links.rb https://docs.rancherdesktop.io docs/tutorials
 ```
