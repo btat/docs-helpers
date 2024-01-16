@@ -1,4 +1,26 @@
-remove_existing_canonical_tag
+files_to_ignore = []
+
+if ARGV[0]
+  files_to_ignore = File.readlines(ARGV[2]).map(&:chomp)
+end
+
+# Remove existing canonical tags
+files = %x[ grep --include \\*.md -ril '<link rel="canonical"' ]
+files.split.each do |file|
+  if files_to_ignore.include?(file)
+    next
+  end
+
+  contents = File.read(file)
+
+  # Remove line with canonical tag
+  new_contents = contents.sub(/  <link rel=\"canonical\".*\n/, "")
+
+  # Remove empty head tags
+  aaa = new_contents.sub(/[\n]*<head>[\n]+<\/head>[\n]*/,"\n\n")
+  
+  File.open(file, "w") {|file| file.puts aaa }
+end
 
 # Add a canonical url to all Markdown files in the /docs directory and add the
 # same canonical url to the pages in versioned_docs with the same filepath
@@ -22,6 +44,10 @@ Dir.glob("#{ARGV[1]}/**/*.md") do |file|
   # canonical url
   if !versioned_files.empty?
     versioned_files.split.each do |versioned_file|
+      if files_to_ignore.include?(versioned_file)
+        next
+      end
+
       add_canonical(versioned_file, canonical_url)
     end
   end
@@ -61,21 +87,5 @@ BEGIN {
     end
 
     File.write("files_without_canonical.txt", files_without_canonical.join("\n"))
-  end
-
-  def remove_existing_canonical_tag
-    # find files with canonical tag
-    files = %x[ grep --include \\*.md -ril '<link rel="canonical"' ]
-    files.split.each do |file|
-      contents = File.read(file)
-
-      # remove line with canonical tag
-      new_contents = contents.sub(/  <link rel=\"canonical\".*\n/, "")
-
-      # remove empty head tags
-      aaa = new_contents.sub(/[\n]*<head>[\n]+<\/head>[\n]*/,"\n\n")
-      
-      File.open(file, "w") {|file| file.puts aaa }
-    end
   end
 }
