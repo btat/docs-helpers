@@ -1,6 +1,6 @@
 files_to_ignore = []
 
-if ARGV[0]
+if ARGV[2]
   files_to_ignore = File.readlines(ARGV[2]).map(&:chomp)
 end
 
