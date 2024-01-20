@@ -17,9 +17,9 @@ files.split.each do |file|
   new_contents = contents.sub(/  <link rel=\"canonical\".*\n/, "")
 
   # Remove empty head tags
-  aaa = new_contents.sub(/[\n]*<head>[\n]+<\/head>[\n]*/,"\n\n")
+  final_contents = new_contents.sub(/[\n]*<head>[\n]+<\/head>[\n]*/,"\n\n")
   
-  File.open(file, "w") {|file| file.puts aaa }
+  File.open(file, "w") {|file| file.puts final_contents }
 end
 
 # Add a canonical url to all Markdown files in the /docs directory and add the
@@ -29,6 +29,15 @@ Dir.glob("#{ARGV[1]}/**/*.md") do |file|
   # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0].chomp("/")
   filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
+  
+  # Check for cases where the file is a "category" file and has the same name as the directory it's in.
+  # E.g. "docs/how-to-guides/new-user-guides/new-user-guides"
+  filepath_split = filepath.split("/")
+  if filepath_split.length > 2 && filepath_split[-1] == filepath_split[-2]
+    # Drop the repeated segment
+    filepath = filepath.split("/")[0..-2].join("/")
+  end
+
   canonical_url = domain + "/" + filepath
 
   if !%x[ grep 'slug: /' #{file} ].empty?
