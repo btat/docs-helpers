@@ -27,9 +27,9 @@ end
 Dir.glob("#{ARGV[1]}/**/*.md") do |file|
 
   # e.g. "https://ranchermanager.docs.rancher.com"
-  domain = ARGV[0]
-  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(/^\d+-/, "")).sub("docs/","/").sub(".md","")
-  canonical_url = (domain + filepath).gsub(/\/+/,"/")
+  domain = ARGV[0].chomp("/")
+  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
+  canonical_url = domain + "/" + filepath
 
   if !%x[ grep 'slug: /' #{file} ].empty?
     canonical_url = domain
