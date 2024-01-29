@@ -30,7 +30,7 @@ end
 Dir.glob(["#{ARGV[1].chomp("/")}/**/*.md", "#{ARGV[1].chomp("/")}/**/*.mdx"]) do |file|
   # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0].chomp("/")
-  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
+  filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".mdx","").sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
   
   # Check for cases where the file is a "category" file and has the same name as the directory it's in.
   # E.g. "docs/how-to-guides/new-user-guides/new-user-guides"
