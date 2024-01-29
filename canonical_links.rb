@@ -27,7 +27,7 @@ end
 
 # Add a canonical url to all Markdown files in the /docs directory and add the
 # same canonical url to the pages in versioned_docs with the same filepath
-Dir.glob("#{ARGV[1].chomp("/")}/**/*.md") do |file|
+Dir.glob(["#{ARGV[1].chomp("/")}/**/*.md", "#{ARGV[1].chomp("/")}/**/*.mdx"]) do |file|
   # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0].chomp("/")
   filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
