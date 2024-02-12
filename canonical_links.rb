@@ -30,14 +30,16 @@ end
 Dir.glob(["#{ARGV[1].chomp("/")}/**/*.md", "#{ARGV[1].chomp("/")}/**/*.mdx"]) do |file|
   # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0].chomp("/")
+  puts "111 #{file}"
   filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".mdx","").sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
-  
+  puts "  222 filepath = #{filepath}"
   # Check for cases where the file is a "category" file and has the same name as the directory it's in.
   # E.g. "docs/how-to-guides/new-user-guides/new-user-guides"
   filepath_split = filepath.split("/")
-  if filepath_split.length > 2 && filepath_split[-1] == filepath_split[-2]
+  if filepath_split.length >= 2 && filepath_split[-1] == filepath_split[-2]
     # Drop the repeated segment
     filepath = filepath.split("/")[0..-2].join("/")
+    puts "    333 filepath=#{filepath}"
   end
 
   canonical_url = domain + "/" + filepath
@@ -55,7 +57,13 @@ Dir.glob(["#{ARGV[1].chomp("/")}/**/*.md", "#{ARGV[1].chomp("/")}/**/*.mdx"]) do
   add_canonical(file, canonical_url, existing_canonical)
 
   # find all files in versioned_docs with the same filepath
-  versioned_files = %x[ find versioned_docs -path "*#{file.sub('docs/','')}" ]
+  versioned_files = []
+  if filepath_split.length > 2
+    versioned_files = %x[ find versioned_docs -path "*#{file.sub('docs/','')}" ]
+  else
+    # top-level files. e.g. "docs/rancher-manager.md"
+    versioned_files = %x[ find versioned_docs -path "*/#{file.sub('docs/','')}" ]
+  end
 
   # if there are files with the same filepath in versioned_docs, add the
   # canonical url
