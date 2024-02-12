@@ -28,18 +28,20 @@ end
 # Add a canonical url to all Markdown files in the /docs directory and add the
 # same canonical url to the pages in versioned_docs with the same filepath
 Dir.glob(["#{ARGV[1].chomp("/")}/**/*.md", "#{ARGV[1].chomp("/")}/**/*.mdx"]) do |file|
+  # Ignore partial files
+  if file.split("/")[-1].start_with?("_")
+    next
+  end
+
   # e.g. "https://ranchermanager.docs.rancher.com"
   domain = ARGV[0].chomp("/")
-  puts "111 #{file}"
   filepath = (file.split("/")[0..-2].join("/") + "/" + file.split("/")[-1].sub(".mdx","").sub(".md","").sub(/^\d+-/, "")).sub("docs/","")
-  puts "  222 filepath = #{filepath}"
   # Check for cases where the file is a "category" file and has the same name as the directory it's in.
   # E.g. "docs/how-to-guides/new-user-guides/new-user-guides"
   filepath_split = filepath.split("/")
   if filepath_split.length >= 2 && filepath_split[-1] == filepath_split[-2]
     # Drop the repeated segment
     filepath = filepath.split("/")[0..-2].join("/")
-    puts "    333 filepath=#{filepath}"
   end
 
   canonical_url = domain + "/" + filepath
