@@ -5,8 +5,12 @@
 files_with_link = %x[ grep -rl --include \\*.adoc "<<" ]
 
 files_with_link.split.uniq.each do |file|
-    internal_links_in_file = %x[ grep -oE "<<([^,-]*-*)*" #{file} ]
-    internal_links_in_file.split.uniq.each do |link| 
-        %x[ sed -i "s|#{link}|#{link.sub('<<','<<_').gsub('-','_')}|g" #{file} ]
+  internal_links_in_file = %x[ grep -oE "<<([^,-]*-*)*" #{file} ]
+  internal_links_in_file.split.uniq.each do |link|
+    new_link = link.gsub('-','_')
+    if !new_link.start_with?("<<_")
+      new_link = new_link.sub('<<','<<_')
     end
+    %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
+  end
 end
