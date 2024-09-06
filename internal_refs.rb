@@ -7,7 +7,7 @@ files_with_link = %x[ grep -rl --include \\*.adoc "<<" ]
 files_with_link.split.uniq.each do |file|
   internal_links_in_file = %x[ grep -oE "<<([^,-]*-*)*" #{file} ]
   internal_links_in_file.split.uniq.each do |link|
-    new_link = link.gsub('-','_')
+    new_link = link.downcase.gsub('-','_')
     if !new_link.start_with?("<<_")
       new_link = new_link.sub('<<','<<_')
     end
