@@ -13,51 +13,16 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
     next
   end
 
-  # move file
+  # move file if it exists
   %x[ mkdir -p #{new_path.split("/")[0..-2].join("/")} ]
-  %x[ mv #{old_path}.md #{new_path}.md ]
+  if File.file?("#{old_path}.md")
+    %x[ mv #{old_path}.md #{new_path}.md ]
+  else
+    File.open("#{old_path}.md", "w") { |f| f.write "TODO: IA DESIGN GAP" }
+  end
 
   update_links(old_path, new_path)
-
-  # update sidebar
-  if old_path.start_with?("docs/")
-    old_path = old_path.sub("docs/", "")
-    new_path = new_path.sub("docs/", "")
-    sidebar_file = "sidebars.js"
-
-    # create redirect block for moved file
-    redirect_block = "{
-  to: '/#{new_path}',
-  from: '/#{old_path}'
-},"
-    redirects.append(redirect_block)
-
-  # versioned_docs/version-XYZ
-  else
-    version = old_path[/version-[^\/]+/]
-    version_number = old_path[/version-[^\/]+/].sub("version-","")
-    old_path = old_path.sub(/versioned_docs\/version-[^\/]+\//, "")
-    new_path = new_path.sub(/versioned_docs\/version-[^\/]+\//, "")
-    sidebar_file = "versioned_sidebars/#{version}-sidebars.json"
-
-    # create redirect block for moved file
-    redirect_block = "{
-  to: '/v#{version_number}/#{new_path}',
-  from: '/v#{version_number}/#{old_path}'
-},"
-    redirects.append(redirect_block)
-  end
-
-  double_quoted = %x[ grep "\\"#{old_path}\\"" #{sidebar_file} ]
-  if double_quoted.empty?
-    %x[ sed -i "s|'#{old_path}'|'#{new_path}'|g" #{sidebar_file} ]
-  else
-    %x[ sed -i "s|\\"#{old_path}\\"|\\"#{new_path}\\"|g" #{sidebar_file} ]
-  end
-  # update sidebar end
 end
-
-File.write("new_redirects.txt", redirects.join("\n"))
 
 # remove empty directories
 %x[ find . -depth -type d -empty -delete ]
