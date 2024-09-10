@@ -15,7 +15,7 @@ Dir.glob("#{asset_dir.chomp("/")}/**/*.*") do |asset_full_path|
     results["Used"] << asset
   else
     results["Unused"] << asset
-    if ARGV[2] == "delete"
+    if ARGV[2] && ARGV[2].downcase == "delete"
       File.delete(asset_full_path)
     end
   end

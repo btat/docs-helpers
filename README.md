@@ -85,14 +85,14 @@ Checks if all assets from a given directory is referenced in a given docs conten
 From the root of the docs repository run the command:
 
 ```
-ruby unused_assets.rb <ASSET_DIRECTORY> <DOCS_DIRECTORY> [<DELETE>]
+ruby unused_assets.rb <ASSET_DIRECTORY> <DOCS_DIRECTORY> [delete]
 ```
 
 Where:
 
 - `<ASSET_DIRECTORY>` is the directory of assets to verify if they're used.
 - `<DOCS_DIRECTORY>` is the docs content directory to check whether references to the asset are present.
-- `<DELETE>` is an [OPTIONAL] string to specify whether the unused assets should be deleted as well.
+- `delete` is an [OPTIONAL] string to specify whether the unused assets should be deleted as well.
 
 Example:
 
