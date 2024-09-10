@@ -75,3 +75,28 @@ old_path, new_path
 docs/pages-for-subheaders/cis-scans, docs/integrations-in-rancher/cis-scans/cis-scans
 docs/pages-for-subheaders/about-the-api, docs/reference-guides/about-the-api/about-the-api
 ```
+
+## Unused Assets
+
+Checks if all assets from a given directory is referenced in a given docs content directory. A JSON file is produced indicating the whether an asset is used or not.
+
+### Usage
+
+From the root of the docs repository run the command:
+
+```
+ruby unused_assets.rb <ASSET_DIRECTORY> <DOCS_DIRECTORY> [<DELETE>]
+```
+
+Where:
+
+- `<ASSET_DIRECTORY>` is the directory of assets to verify if they're used.
+- `<DOCS_DIRECTORY>` is the docs content directory to check whether references to the asset are present.
+- `<DELETE>` is an [OPTIONAL] string to specify whether the unused assets should be deleted as well.
+
+Example:
+
+```
+ruby unused_assets.rb static/img/ docs
+ruby unused_assets.rb static/img/ docs delete
+```
