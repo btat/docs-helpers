@@ -6,10 +6,8 @@
 files_with_link = %x[ grep -rlE --include \\*.adoc "link:\.{1,2}/[^\[]*" ]
 
 files_with_link.split.uniq.each do |file|
-  puts "1 file:#{file}"
   internal_links_in_file = %x[ grep -oE "link:\.{1,2}/[^\[]*" #{file} ]
   internal_links_in_file.split.uniq.each do |link|
-    puts "    2 link:#{link}"
     new_link = link.sub("link:./","xref:./").sub("link:../","xref:../")
     %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
   end
