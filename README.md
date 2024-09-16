@@ -100,3 +100,44 @@ Example:
 ruby unused_assets.rb static/img/ docs
 ruby unused_assets.rb static/img/ docs delete
 ```
+
+## Internal xrefs
+
+Process internal links in files to fix formatting issues:
+
+- Convert link macro to xref macro to enable validation.
+- Fix formatting issues for internal xrefs using angled bracket notation.
+- Fix xref macros containing section ID (fragment/hash) with formatting errors (hyphens vs underscore, initial underscore).
+
+### Usage
+
+From the modules/*/pages directory run the command:
+
+```
+ruby internal_refs.rb <LINK_TYPE>
+```
+
+Where:
+
+- `<LINK_TYPE>` is one of all, link, angled, or hyphen.
+
+Example:
+
+```
+ruby internal_refs.rb all
+ruby internal_refs.rb link
+ruby internal_refs.rb angled
+ruby internal_refs.rb hyphen
+```
+
+## Relative xrefs
+
+Process xrefs to use Antora-style family directory relative file paths
+
+### Usage
+
+From the modules/*/pages directory run the command:
+
+```
+ruby relative_xrefs.rb 
+```
