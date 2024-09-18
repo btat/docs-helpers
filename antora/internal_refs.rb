@@ -36,7 +36,8 @@ if fix_type == "all" || fix_type == "angled"
         if !new_link.start_with?("<<_")
           new_link.sub!("<<","<<_")
         end
-        %x[ sed -i "s|#{link.split(',')[0]},#{link.split(',')[1]}|#{new_link},#{link.split(',')[1]}|g" #{file} ]
+        sanitized_label = #{link.split(',')[1]}.gsub("/","\\/")
+        %x[ sed -i "s|#{link.split(',')[0]},#{sanitized_label}|#{new_link},#{sanitized_label}|g" #{file} ]
       else
         new_link = link.downcase.gsub("-","_").gsub(" ","_")
         if !new_link.start_with?("<<_")

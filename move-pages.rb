@@ -8,6 +8,12 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   new_path = row["new_path"]
   old_path = row["old_path"]
 
+  # remove file if new=delete
+  if new_path == "delete"
+    File.delete(asset_full_path)
+    next
+  end
+
   # skip if new=old
   if new_path == old_path
     next
