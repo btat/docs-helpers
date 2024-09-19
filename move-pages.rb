@@ -19,6 +19,13 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
     next
   end
 
+  # skip if old doesn't exist
+  # possible duplicate
+  if !File.exist?("#{old_path}.md")
+    puts "File not found: #{old_path}.md"
+    next
+  end
+
   # move file
   %x[ mkdir -p #{new_path.split("/")[0..-2].join("/")} ]
   %x[ mv #{old_path}.md #{new_path}.md ]
