@@ -22,7 +22,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   # skip if old doesn't exist
   # possible duplicate
   if !File.exist?("#{old_path}.md")
-    puts "File not found: #{old_path}.md"
+    puts "File not found/possible duplicate: #{old_path}.md"
     next
   end
 
