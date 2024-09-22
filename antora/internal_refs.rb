@@ -32,14 +32,14 @@ if fix_type == "all" || fix_type == "angled"
     internal_links_in_file.split("\n").uniq.each do |link|
       new_link = ""
       if link.include?(",")
-        new_link = link.split(",")[0].downcase.gsub("-","_").gsub(" ","_")
+        new_link = link.split(",")[0].downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
         if !new_link.start_with?("<<_")
           new_link.sub!("<<","<<_")
         end
         sanitized_label = #{link.split(',')[1]}.gsub("/","\\/")
         %x[ sed -i "s|#{link.split(',')[0]},#{sanitized_label}|#{new_link},#{sanitized_label}|g" #{file} ]
       else
-        new_link = link.downcase.gsub("-","_").gsub(" ","_")
+        new_link = link.downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
         if !new_link.start_with?("<<_")
           new_link = new_link.sub("<<","<<_")
         end

@@ -10,7 +10,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
 
   # remove file if new=delete
   if new_path == "delete"
-    File.delete(asset_full_path)
+    File.delete("#{old_path}.md")
     next
   end
 
@@ -32,6 +32,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
 
   update_links(old_path, new_path)
 
+=begin
   # update sidebar
   if old_path.start_with?("docs/")
     old_path = old_path.sub("docs/", "")
@@ -60,17 +61,11 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
 },"
     redirects.append(redirect_block)
   end
+=end
 
-  double_quoted = %x[ grep "\\"#{old_path}\\"" #{sidebar_file} ]
-  if double_quoted.empty?
-    %x[ sed -i "s|'#{old_path}'|'#{new_path}'|g" #{sidebar_file} ]
-  else
-    %x[ sed -i "s|\\"#{old_path}\\"|\\"#{new_path}\\"|g" #{sidebar_file} ]
-  end
-  # update sidebar end
 end
 
-File.write("new_redirects.txt", redirects.join("\n"))
+# File.write("new_redirects.txt", redirects.join("\n"))
 
 # remove empty directories
 %x[ find . -depth -type d -empty -delete ]
@@ -101,7 +96,7 @@ BEGIN {
         links_in_file = %x[ grep -oE "[_:./a-zA-Z0-9+-]*#{unversioned_old_path.split('/')[-1]}\\.md" #{file} ]
 
         # filter out external links and absolute links to versioned docs
-        links_in_file = links_in_file.split.uniq.reject {|link| link.include?("http:/") || link.include?("https:/") || link.include?("www.") || link.include?("versioned_docs/version-") }
+        links_in_file = links_in_file.split.uniq.reject {|link| link.include?("http:/") || link.include?("https:/") || link.include?("www.") || link.include?("versioned_docs/version-") || link.start_with?("/") }
 
         links_in_file.each do |link|
           # some file have the same filename e.g. pages-for-subheaders/vsphere.md vs reference-guides/cluster-configuration/downstream-cluster-configuration/node-template-configuration/vsphere.md

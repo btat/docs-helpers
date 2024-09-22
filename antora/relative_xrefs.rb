@@ -9,6 +9,11 @@ files_with_link.split.uniq.each do |file|
     link_abs_path = %x[ realpath #{file_dirname + "/" + link.sub("xref:","")} ].chomp
     new_link = link_abs_path.sub(pwd + "/","")
 
-    %x[ sed -i "s|#{link.sub("xref:","")}|#{new_link}|g" #{file} ]
+    # puts "file #{file}"
+    # puts "old: #{link}"
+    # puts "new: #{new_link}"
+
+    # %x[ sed -i "s|#{link.sub("xref:","")}|#{new_link}|g" #{file} ]
+    %x[ sed -i "s|#{link}|xref:#{new_link}|g" #{file} ]
   end
 end
