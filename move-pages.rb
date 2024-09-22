@@ -2,15 +2,15 @@ require 'csv'
 
 # git reset --hard;git clean -fd;reset;ruby ~/docs-helpers/page-move.rb ~/docs-helpers/files_to_move.csv
 
-redirects = []
+files_to_delete = []
 
 CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   new_path = row["new_path"]
   old_path = row["old_path"]
 
-  # remove file if new=delete
-  if new_path == "delete"
-    File.delete("#{old_path}.md")
+  # delete file if new=remove
+  if new_path == "remove"
+    files_to_delete.append("#{old_path}.md")
     next
   end
 
@@ -66,6 +66,10 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
 end
 
 # File.write("new_redirects.txt", redirects.join("\n"))
+
+files_to_delete.each do |file|
+  File.delete(file)
+end
 
 # remove empty directories
 %x[ find . -depth -type d -empty -delete ]
