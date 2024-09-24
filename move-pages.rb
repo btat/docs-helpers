@@ -14,6 +14,13 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
     next
   end
 
+  # translated docs may lag behind en docs
+  # create placeholder page for pages missing from translated set
+  if old_path == "placeholder"
+    File.write("#{new_path}.md", "PLACEHOLDER: TODO COPY CONTENTS")
+    next
+  end
+
   # skip if new=old
   if new_path == old_path
     next
