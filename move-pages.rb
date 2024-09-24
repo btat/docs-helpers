@@ -17,7 +17,11 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ", ") do |row|
   # translated docs may lag behind en docs
   # create placeholder page for pages missing from translated set
   if old_path == "placeholder"
-    File.write("#{new_path}.md", "PLACEHOLDER: TODO COPY CONTENTS")
+    %x[ mkdir -p #{new_path.split("/")[0..-2].join("/")} ]
+    File.open("#{new_path}.md", "w") do |f|     
+      f.write("PLACEHOLDER: TODO COPY CONTENTS")   
+    end
+    
     next
   end
 
