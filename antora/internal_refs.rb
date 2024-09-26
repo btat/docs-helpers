@@ -12,13 +12,9 @@ if fix_type == "all" || fix_type == "link"
 
   files_with_link.split.uniq.each do |file|
     internal_links_in_file = %x[ grep -oE "link:\.{1,2}/[^\[]*" #{file} ]
-    internal_links_in_file.split.uniq.each do |line|
-      # lines with multiple links
-      links = line.scan(/link:\.{1,2}\/[^\[]*/)
-      links.flatten.each do |link|
-        new_link = link.sub("link:./","xref:./").sub("link:../","xref:../")
-        %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
-      end
+    internal_links_in_file.split.uniq.each do |link|
+      new_link = link.sub("link:./","xref:./").sub("link:../","xref:../")
+      %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
     end
   end
   puts "Done"
@@ -30,27 +26,24 @@ if fix_type == "all" || fix_type == "angled"
   puts "Fixing formatting of internal xrefs using angled brackets"
 
   files_with_link = %x[ grep -rlE --include \\*.adoc "<<.*>>" ]
+
   files_with_link.split.uniq.each do |file|
     internal_links_in_file = %x[ grep -oE "<<(.*)>>" #{file} ].chomp
-    internal_links_in_file.split("\n").uniq.each do |line|
-      # lines with multiple links
-      links = line.scan(/<<(.*?)>>/)
-      links.flatten.each do |link|
-        new_link = ""
-        if link.include?(",")
-          new_link = link.split(",")[0].downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
-          if !new_link.start_with?("<<_")
-            new_link.sub!("<<","<<_")
-          end
-          sanitized_label = #{link.split(',')[1]}.gsub("/","\\/")
-          %x[ sed -i "s|#{link.split(',')[0]},#{sanitized_label}|#{new_link},#{sanitized_label}|g" #{file} ]
-        else
-          new_link = link.downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
-          if !new_link.start_with?("<<_")
-            new_link = new_link.sub("<<","<<_")
-          end
-          %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]     
+    internal_links_in_file.split("\n").uniq.each do |link|
+      new_link = ""
+      if link.include?(",")
+        new_link = link.split(",")[0].downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
+        if !new_link.start_with?("<<_")
+          new_link.sub!("<<","<<_")
         end
+        sanitized_label = #{link.split(',')[1]}.gsub("/","\\/")
+        %x[ sed -i "s|#{link.split(',')[0]},#{sanitized_label}|#{new_link},#{sanitized_label}|g" #{file} ]
+      else
+        new_link = link.downcase.gsub("-","_").gsub(" ","_").gsub(/_+/,"_")
+        if !new_link.start_with?("<<_")
+          new_link = new_link.sub("<<","<<_")
+        end
+        %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]     
       end
     end
   end
@@ -67,26 +60,22 @@ if fix_type == "all" || fix_type == "hyphen"
 
   files_with_link.split.uniq.each do |file|
     internal_links_in_file = %x[ grep -oE "xref:[^\[]*" #{file} ].chomp
-    internal_links_in_file.split.uniq.each do |line|
-      # lines with multiple links
-      links = line.scan(/xref:[^\[]*/)
-      links.flatten.each do |link|
-        if !link.include?("#")
-          next
-        end
-
-        header = link[/#.*/]
-        new_header = header.gsub("-","_")
-        
-        if !new_header.start_with?("#_")
-          new_header.sub!("#","#_")
-        end
-
-        new_link = link.sub(header, new_header)
-        new_link.gsub!(/_+/,"_")
-        
-        %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
+    internal_links_in_file.split.uniq.each do |link|
+      if !link.include?("#")
+        next
       end
+
+      header = link[/#.*/]
+      new_header = header.gsub("-","_")
+      
+      if !new_header.start_with?("#_")
+        new_header.sub!("#","#_")
+      end
+
+      new_link = link.sub(header, new_header)
+      new_link.gsub!(/_+/,"_")
+      
+      %x[ sed -i "s|#{link}|#{new_link}|g" #{file} ]
     end
   end
   puts "Done"
