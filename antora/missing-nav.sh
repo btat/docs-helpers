@@ -17,7 +17,7 @@ for dir in $MODULE_LANG_DIRS; do
         NAV_FILE="${dir%pages}nav.adoc"
         
         if ! grep -q $MODULE_LANG_RELATIVE_PATH $NAV_FILE; then
-            echo $file > tmp/missing-nav.log
+            echo $file >> tmp/missing-nav.log
         fi
     done
 done
