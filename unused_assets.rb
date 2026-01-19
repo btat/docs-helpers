@@ -1,7 +1,7 @@
 require 'json'
 
-# ARGV[0] = asset directory
-# ARGV[1] = search directory
+# ARGV[0] = asset directory (include trailing slash)
+# ARGV[1] = search directory (include trailing slash)
 # ARGV[2] = "delete" to also remove unused asset file
 
 asset_dir =  ARGV[0]
