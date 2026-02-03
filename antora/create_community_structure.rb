@@ -38,6 +38,6 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
     file_c = Pathname.new(c_dirname)
     
     relative_path = file_p.relative_path_from(file_c)
-    %x[ ln -s #{relative_path} #{c_base_path + "/" + c_path}.adoc]
+    %x[ ln -s #{relative_path}.adoc #{c_base_path + "/" + c_path}.adoc]
   end  
 end
