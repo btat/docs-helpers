@@ -21,6 +21,16 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
 
   c_file = pwd + "/" + c_base_path + "/" + c_path
   c_dirname = %x[ dirname #{c_file}].chomp
+  c_filename = %x[ basename #{c_file}].chomp
+  c_parentdir = %x[ basename #{c_dirname}].chomp
+
+  # Files that have the same name as its parent folder are index files. Rename to index.
+  if c_filename == c_parentdir
+    new_path = c_path.split("/")
+    new_path[-1] = "index"
+    new_path = new_path.join("/")
+    c_file = pwd + "/" + c_base_path + "/" + new_path
+  end
 
   if !Dir.exist?(c_dirname)
     %x[ mkdir -p #{c_dirname}]
