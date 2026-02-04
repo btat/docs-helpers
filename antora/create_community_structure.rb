@@ -41,11 +41,17 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
     %x[ echo "TODO - CONVERT FILE" > #{c_file}.adoc]
   # Common file between Product and Community. Create symlink.
   else
-    p_file = pwd + "/" + p_base_path + "/" + p_path
+    p_file = pwd + "/" + p_base_path + "/" + p_path + ".adoc"
+
+    if !File.exist?(p_file)
+      puts "Skip symlink. Product file not found: #{p_file}"
+      next
+    end
+
     file_p = Pathname.new(p_file)
     file_c = Pathname.new(c_dirname)
     
     relative_path = file_p.relative_path_from(file_c)
-    %x[ ln -s #{relative_path}.adoc #{c_base_path + "/" + c_path}.adoc]
+    %x[ ln -s #{relative_path} #{c_base_path + "/" + c_path}.adoc]
   end  
 end
