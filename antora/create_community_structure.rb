@@ -1,7 +1,7 @@
 require 'csv'
 require 'pathname'
 
-# git reset --hard;git clean -fd;reset;ruby ~/docs-helpers/antora/create_community_structure.rb ~/docs-helpers/mapping.csv v2.13 en
+# git reset --hard;git clean -fd;reset;ruby ~/docs-helpers/antora/create_community_structure.rb ~/docs-helpers/mappings/2-13.csv v2.13 en
 
 version = ARGV[1]
 language = ARGV[2]
@@ -53,5 +53,17 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
     
     relative_path = file_p.relative_path_from(file_c)
     %x[ ln -s #{relative_path} #{c_base_path + "/" + c_path}.adoc]
+
+    # add_path_attribute(c_path, p_path)
+    target = ":page-revdate: {revdate}"
+    paths = "\\n:community-path: #{c_path} \\n:product-path: #{p_path}"
+    %x[ sed -i "s@#{target}@#{target}#{paths}@" #{p_file} ]
   end  
 end
+
+# def add_path_attribute(community_path, product_path)
+#   target = ":page-revdate: {revdate}"
+#   paths = ":community-path: #{community} \n:product-path: #{product_path}"
+
+#   %x[ sed -i "s|#{target}|#{target}#{paths}| #{p_file} ]
+# end
