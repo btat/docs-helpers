@@ -62,7 +62,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
       %x[ sed -i "s@#{target}@#{target}#{paths}@" #{p_file} ]
     # Community/product path attributes exist. Update.
     else
-      %x[ sed -i "s@:community-path: .*\\$@:community-path: #{c_path}@" #{p_file} ]
+      %x[ sed -i "s@:community-path: .*\\$@:community-path: #{c_path} @" #{p_file} ]
       %x[ sed -i "s@:product-path: .*\\$@:product-path: #{p_path}@" #{p_file} ]
       # %x[ sed -i "s@:community-path: @:community-path: @" #{p_file} ]
       # %x[ sed -i "s@:product-path: @:product-path: @" #{p_file} ]
