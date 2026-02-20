@@ -52,7 +52,7 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
     file_c = Pathname.new(c_dirname)
     
     relative_path = file_p.relative_path_from(file_c)
-    %x[ ln -s #{relative_path} #{c_file}.adoc]
+    %x[ ln -sf #{relative_path} #{c_file}.adoc]
 
     # Community/product path attributes don't exist. Create new ones.
     if !%x[ grep ':community-path:' #{p_file} ].empty?
