@@ -8,7 +8,7 @@ language = ARGV[2]
 
 pwd = (%x[ pwd ]).chomp
 p_base_path = "versions/#{version}/modules/#{language}/pages"
-c_base_path = "community-docs/#{version}/modules/#{language}/pages"
+c_base_path = "community-docs/#{version}/modules/ROOT/pages"
 
 CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
   p_path = row["product_path"]
