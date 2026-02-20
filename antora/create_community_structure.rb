@@ -54,8 +54,15 @@ CSV.foreach(ARGV[0], headers: true, col_sep: ",") do |row|
     relative_path = file_p.relative_path_from(file_c)
     %x[ ln -s #{relative_path} #{c_file}.adoc]
 
-    target = ":page-revdate: {revdate}"
-    paths = "\\n:community-path: #{c_path} \\n:product-path: #{p_path}"
-    %x[ sed -i "s@#{target}@#{target}#{paths}@" #{p_file} ]
+    # Community/product path attributes don't exist. Create new ones.
+    if !%x[ grep ':community-path:' #{p_file} ].empty?
+      target = ":page-revdate: {revdate}"
+      paths = "\\n:community-path: #{c_path} \\n:product-path: #{p_path}"
+      %x[ sed -i "s@#{target}@#{target}#{paths}@" #{p_file} ]
+    # Community/product path attributes exist. Update.
+    else
+      %x[ sed 's/:community-path: .*$/:community-path: #{c_path}/' #{p_file} ]
+      %x[ sed 's/:product-path: .*$/:product-path:: #{p_path}/' #{p_file} ]
+    end
   end  
 end
